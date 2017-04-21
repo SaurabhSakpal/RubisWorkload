@@ -752,7 +752,7 @@ public class UserSession extends Thread
     long startSession = 0;
     long endSession = 0;
 
-    while (!ClientEmulator.isEndOfSimulation())
+    while (!WorkloadGenerator.isEndOfSimulation())
     {
       // Select a random user for this session
       userId = rand.nextInt(rubis.getNbOfUsers());
@@ -766,7 +766,7 @@ public class UserSession extends Thread
       // Start from Home Page
       transition.resetToInitialState();
       next = transition.getCurrentState();
-      while (!ClientEmulator.isEndOfSimulation()
+      while (!WorkloadGenerator.isEndOfSimulation()
           && !transition.isEndOfSession() && (nbOfTransitions > 0))
       {
         // Compute next step and call HTTP server (also measure time spend in

@@ -2,8 +2,10 @@ package edu.rice.rubis.client;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.util.GregorianCalendar;
+import java.util.Scanner;
 
 import edu.rice.rubis.beans.TimeManagement;
 
@@ -34,10 +36,11 @@ public class WorkloadGenerator {
 		if (urlGen == null)
 			Runtime.getRuntime().exit(1);
 		// Check that the transition table is ok and print it
-		
+
 		Stats stats = new Stats(rubis.getNbOfRows());
-		TransitionTable transitionTable = new TransitionTable(rubis.getNbOfColumns(), rubis.getNbOfRows(), stats, rubis.useTPCWThinkTime(), rubis.getTransitionTable());  
-		
+		TransitionTable transitionTable = new TransitionTable(rubis.getNbOfColumns(), rubis.getNbOfRows(), stats,
+				rubis.useTPCWThinkTime(), rubis.getTransitionTable());
+
 		if (!transitionTable.ReadExcelTextFile(rubis.getTransitionTable()))
 			Runtime.getRuntime().exit(1);
 		else
@@ -144,8 +147,10 @@ public class WorkloadGenerator {
 	 *
 	 * @param args
 	 *            optional output file if run as remote client
+	 * @throws InterruptedException
+	 * @throws FileNotFoundException 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException, FileNotFoundException {
 		GregorianCalendar startDate;
 		GregorianCalendar endDate;
 		GregorianCalendar upRampDate;
@@ -164,7 +169,7 @@ public class WorkloadGenerator {
 													// client
 		String propertiesFileName;
 
-		//String rawLogFileName = "/home/hcnguye3/rawlog.txt";
+		// String rawLogFileName = "/home/hcnguye3/rawlog.txt";
 		if (isMainClient) {
 			// Start by creating a report directory and redirecting output to an
 			// index.html file
@@ -205,7 +210,7 @@ public class WorkloadGenerator {
 			if (args.length == 0)
 				propertiesFileName = "rubis";
 			else
-				propertiesFileName = args[0];
+				propertiesFileName = "rubis";
 		} else {
 			System.out.println("RUBiS remote client emulator - (C) Rice University/INRIA 2001");
 			startDate = new GregorianCalendar();
@@ -218,11 +223,11 @@ public class WorkloadGenerator {
 																				// info
 
 		if (args.length > 1) {
-			int numOfClinets = Integer.parseInt(args[1]);
-			//client.rubis.setNbOfClients(numOfClinets);
+			//int numOfClinets = Integer.parseInt(args[1]);
+			// client.rubis.setNbOfClients(numOfClinets);
 		}
 		if (args.length > 2) {
-			//rawLogFileName = args[2];
+			// rawLogFileName = args[2];
 		}
 
 		Stats stats = new Stats(client.rubis.getNbOfRows());
@@ -230,82 +235,136 @@ public class WorkloadGenerator {
 		Stats runSessionStats = new Stats(client.rubis.getNbOfRows());
 		Stats downRampStats = new Stats(client.rubis.getNbOfRows());
 		Stats allStats = new Stats(client.rubis.getNbOfRows());
-		UserSession[] sessions = new UserSession[client.rubis.getNbOfClients()];
+//		UserSession[] sessions = new UserSession[client.rubis.getNbOfClients()];
+//
+//		System.err.println("WorkloadGenerator initialized for rubis server: " + client.rubis.getWebServerName());
+//
+//		// #############################
+//		// ### TEST TRACE BEGIN HERE ###
+//		// #############################
+//
+//		System.err.println("Run user sessions, total number: " + client.rubis.getNbOfClients());
+//
+//		// Run user sessions
+//		System.out.println("WorkloadGenerator: Starting " + client.rubis.getNbOfClients() + " session threads");
+//		for (int i = 0; i < client.rubis.getNbOfClients(); i++) {
+//			sessions[i] = new UserSession("UserSession" + i, client.urlGen, client.rubis, stats);
+//			// sessions[i].rawLogFileName = rawLogFileName;
+//			sessions[i].start();
+//		}
+//
+//		System.err.println("All user sessions have started: " + client.rubis.getNbOfClients());
 
-		System.err.println("WorkloadGenerator initialized for rubis server: " + client.rubis.getWebServerName());
+		// System.err.println("Start up-ramp");
+		//
+		// // Start up-ramp
+		//
+		// System.out.println("WorkloadGenerator: Switching to ** UP RAMP **");
+		// client.setSlowDownFactor(client.rubis.getUpRampSlowdown());
+		// upRampDate = new GregorianCalendar();
+		//
+		// System.err.println("Begin to sleep: " +
+		// client.rubis.getUpRampTime());
+		//
+		// try {
+		// Thread.currentThread().sleep(client.rubis.getUpRampTime());
+		// } catch (java.lang.InterruptedException ie) {
+		// System.err.println("WorkloadGenerator has been interrupted.");
+		// }
+		// upRampStats.merge(stats);
+		// stats.reset(); // Note that as this is not
+		// // atomic we may lose some stats here ...
+		//
+		// System.err.println("Start runtime session");
+		//
+		// // Start runtime session
+		// System.out.println("<br><A NAME=\"run\"></A>");
+		// System.out.println("<h3>WorkloadGenerator: Switching to ** RUNTIME
+		// SESSION **</h3><br><p>");
+		// client.setSlowDownFactor(1);
+		// runSessionDate = new GregorianCalendar();
+		// System.err.println("Begin to sleep: " +
+		// client.rubis.getSessionTime());
+		// try {
+		// Thread.currentThread().sleep(client.rubis.getSessionTime());
+		// } catch (java.lang.InterruptedException ie) {
+		// System.err.println("WorkloadGenerator has been interrupted.");
+		// }
+		// runSessionStats.merge(stats);
+		// stats.reset(); // Note that as this is
+		// // not atomic we may lose some stats here ...
+		//
+		// System.err.println("Start down-ramp");
+		//
+		// // Start down-ramp System.out.println("<br><A NAME=\"down\"></A>");
+		// System.out.println("<h3>WorkloadGenerator: Switching to ** DOWN RAMP
+		// **</h3><br><p>");
+		// client.setSlowDownFactor(client.rubis.getDownRampSlowdown());
+		// downRampDate = new GregorianCalendar();
+		// System.err.println("Begin to sleep: " +
+		// client.rubis.getDownRampTime());
+		// try {
+		// Thread.currentThread().sleep(client.rubis.getDownRampTime());
+		// } catch (java.lang.InterruptedException ie) {
+		// System.err.println("WorkloadGenerator has been interrupted.");
+		// }
+		// downRampStats.merge(stats);
+		// endDownRampDate = new GregorianCalendar();
+		//
+		// System.err.println("WorkloadGenerator: Shutting down threads ...");
+		//
+		// // Wait for completion client.setEndOfSimulation();
+		// System.out.println("WorkloadGenerator: Shutting down threads
+		// ...<br>");
+		// for (int i = 0; i < client.rubis.getNbOfClients(); i++) {
+		// try {
+		// long t = 5000 - 1000 * i;
+		// if (t <= 0)
+		// t = 10;
+		// sessions[i].join(t);
+		// } catch (java.lang.InterruptedException ie) {
+		// System.err.println("WorkloadGenerator: Thread " + i + " has been
+		// interrupted.");
+		// }
+		// }
+		
+		File file = new File(args[0]);
+		Scanner sc = new Scanner(file);
+		while (sc.hasNextInt()) {
+			
+			int numberOfClients = sc.nextInt();
+			client.endOfSimulation = false;
 
-		// #############################
-		// ### TEST TRACE BEGIN HERE ###
-		// #############################
+			UserSession[] sessions = new UserSession[numberOfClients];
 
-		System.err.println("Run user sessions, total number: " + client.rubis.getNbOfClients());
+			// System.err.println("WorkloadGenerator initialized for rubis
+			// server: " + client.rubis.getWebServerName());
 
-		// Run user sessions
-		System.out.println("WorkloadGenerator: Starting " + client.rubis.getNbOfClients() + " session threads");
-		for (int i = 0; i < client.rubis.getNbOfClients(); i++) {
-			sessions[i] = new UserSession("UserSession" + i, client.urlGen, client.rubis, stats);
-			//sessions[i].rawLogFileName = rawLogFileName;
-			sessions[i].start();
+			// System.err.println("Run user sessions, total number: " +
+			// client.rubis.getNbOfClients());
+
+			// Run user sessions
+			System.out.println("WorkloadGenerator: Starting " + numberOfClients + " session threads");
+			for (int i = 0; i < numberOfClients; i++) {
+				sessions[i] = new UserSession("UserSession" + i, client.urlGen, client.rubis, stats);
+				// sessions[i].rawLogFileName = rawLogFileName;
+				sessions[i].start();
+			}
+
+			Thread.sleep(client.rubis.getSessionTime());
+			
+			client.setEndOfSimulation();
+
+			for (int i = 0; i < numberOfClients; i++) {
+				try {
+					sessions[i].join();
+				} catch (java.lang.InterruptedException ie) {
+					System.err.println("WorkloadGenerator: Thread " + i + " has been interrupted.");
+				}
+			}
+			System.out.println("All User Sessions have finished. We will start next set of clients");
 		}
 
-		System.err.println("All user sessions have started: " + client.rubis.getNbOfClients());
-
-		System.err.println("Start up-ramp");
-
-		// Start up-ramp
-		/*
-		 * System.out.println("WorkloadGenerator: Switching to ** UP RAMP **");
-		 * client.setSlowDownFactor(client.rubis.getUpRampSlowdown());
-		 * upRampDate = new GregorianCalendar();
-		 * 
-		 * System.err.println("Begin to sleep: " +
-		 * client.rubis.getUpRampTime());
-		 * 
-		 * try { Thread.currentThread().sleep(client.rubis.getUpRampTime()); }
-		 * catch (java.lang.InterruptedException ie) {
-		 * System.err.println("WorkloadGenerator has been interrupted."); }
-		 * upRampStats.merge(stats); stats.reset(); // Note that as this is not
-		 * atomic we may lose some stats here ...
-		 * 
-		 * System.err.println("Start runtime session");
-		 * 
-		 * // Start runtime session
-		 * System.out.println("<br><A NAME=\"run\"></A>"); System.out.
-		 * println("<h3>WorkloadGenerator: Switching to ** RUNTIME SESSION **</h3><br><p>"
-		 * ); client.setSlowDownFactor(1); runSessionDate = new
-		 * GregorianCalendar(); System.err.println("Begin to sleep: " +
-		 * client.rubis.getSessionTime()); try {
-		 * Thread.currentThread().sleep(client.rubis.getSessionTime()); } catch
-		 * (java.lang.InterruptedException ie) {
-		 * System.err.println("WorkloadGenerator has been interrupted."); }
-		 * runSessionStats.merge(stats); stats.reset(); // Note that as this is
-		 * not atomic we may lose some stats here ...
-		 * 
-		 * System.err.println("Start down-ramp");
-		 * 
-		 * // Start down-ramp System.out.println("<br><A NAME=\"down\"></A>");
-		 * System.out.
-		 * println("<h3>WorkloadGenerator: Switching to ** DOWN RAMP **</h3><br><p>"
-		 * ); client.setSlowDownFactor(client.rubis.getDownRampSlowdown());
-		 * downRampDate = new GregorianCalendar();
-		 * System.err.println("Begin to sleep: " +
-		 * client.rubis.getDownRampTime()); try {
-		 * Thread.currentThread().sleep(client.rubis.getDownRampTime()); } catch
-		 * (java.lang.InterruptedException ie) {
-		 * System.err.println("WorkloadGenerator has been interrupted."); }
-		 * downRampStats.merge(stats); endDownRampDate = new
-		 * GregorianCalendar();
-		 * 
-		 * System.err.println("WorkloadGenerator: Shutting down threads ...");
-		 * 
-		 * // Wait for completion client.setEndOfSimulation();
-		 * System.out.println("WorkloadGenerator: Shutting down threads ...<br>"
-		 * ); for (int i = 0 ; i < client.rubis.getNbOfClients() ; i++) { try {
-		 * long t = 5000 - 1000*i; if (t <= 0) t = 10; sessions[i].join(t); }
-		 * catch (java.lang.InterruptedException ie) {
-		 * System.err.println("WorkloadGenerator: Thread "
-		 * +i+" has been interrupted."); } }
-		 */
 		System.out.println("Done\n");
 		endDate = new GregorianCalendar();
 		allStats.merge(stats);
