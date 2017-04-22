@@ -330,6 +330,7 @@ public class WorkloadGenerator {
 		
 		File file = new File(args[0]);
 		Scanner sc = new Scanner(file);
+		
 		while (sc.hasNextInt()) {
 			
 			int numberOfClients = sc.nextInt();
