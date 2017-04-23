@@ -328,6 +328,8 @@ public class WorkloadGenerator {
 		// }
 		// }
 		
+		int timeToSleep = Integer.parseInt(args[1]);
+		
 		File file = new File(args[0]);
 		Scanner sc = new Scanner(file);
 		
@@ -352,7 +354,7 @@ public class WorkloadGenerator {
 				sessions[i].start();
 			}
 
-			Thread.sleep(client.rubis.getSessionTime());
+			Thread.sleep(timeToSleep);
 			
 			client.setEndOfSimulation();
 
