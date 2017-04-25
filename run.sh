@@ -1,4 +1,5 @@
 #!/bin/bash
 cd bin
-java -cp . edu/rice/rubis/client/WorkloadGenerator curve_nasa_60_2 5000
+# in milliseconds
+java -cp . edu/rice/rubis/client/WorkloadGenerator demo1 600000
 cd ../
